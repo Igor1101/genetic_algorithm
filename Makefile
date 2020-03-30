@@ -1,6 +1,6 @@
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
-OBJS =		genetic.o RNG.o
+OBJS =		genetic.o RNG.o getch.o
 
 LIBS =
 

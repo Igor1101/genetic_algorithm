@@ -10,6 +10,7 @@
 #include <new>
 #include <algorithm>    // std::sort
 #include <array>
+#include "getch.h"
 #include "RNG.h"
 
 class genotype {
@@ -240,11 +241,12 @@ int main(void) {
 			char ch;
 			printf("approximated result:");
 			apprx.print();
-			printf("operation took %d iterations, continue?(Y/N)", iter);
+			printf("operation took %d iterations, continue?(Y/N)\n", iter);
 			/* use system call to make terminal send all keystrokes directly to stdin */
-			system ("/bin/stty raw");
 			while(1) {
-				ch=getchar();
+				set_conio_terminal_mode();
+				ch=getch();
+				reset_terminal_mode();
 				putchar(ch);
 				if(ch == 'Y') {
 					puts("continuing");
@@ -256,7 +258,6 @@ int main(void) {
 					printf("(Y/N)");
 			}
 			/* use system call to set terminal behaviour to more normal behaviour */
-			system ("/bin/stty cooked");
 		}
 		//genalg.print_fathers();
 		genalg.mutate_children();
