@@ -23,10 +23,17 @@ public:
 	void generate(int y)
 	{
 		RNG_init();
-		x1 = RNG.get_int(1, y/2);
-		x2 = RNG.get_int(1, y/2);
-		x3 = RNG.get_int(1, y/2);
-		x4 = RNG.get_int(1, y/2);
+		if(y>1) {
+			x1 = RNG.get_int(1, y/2);
+			x2 = RNG.get_int(1, y/2);
+			x3 = RNG.get_int(1, y/2);
+			x4 = RNG.get_int(1, y/2);
+		} else {
+			x1 = RNG.get_int(y/2, 1);
+			x2 = RNG.get_int(y/2, 1);
+			x3 = RNG.get_int(y/2, 1);
+			x4 = RNG.get_int(y/2, 1);
+		}
 	}
 	void mutate()
 	{
@@ -153,7 +160,8 @@ public:
 		}
 		return result;
 	}
-	void calculate_children()
+	// return most approximated result
+	genotype calculate_children()
 	{
 		// sort fathers
 		std::sort(fathers.begin(), fathers.end(), cmp_fathers);
@@ -172,6 +180,7 @@ public:
 			if(begin_from >= GENS)
 				break;
 		}
+		return fathers[0];
 	}
 	void mutate_children()
 	{
@@ -216,9 +225,21 @@ int main(void) {
 	genetic genalg = genetic(y, a, b, c, d);
 	genalg.generate_fathers();
 	int iter=1;
+	int itermax=1000;
 	for(;;iter++) {
-		if((iter % 1000) == 0) {
+		genotype* mayberesult = genalg.fitness();
+		if(mayberesult != NULL) {
+			printf("found result to equation at iteration %d:\n", iter);
+			mayberesult->print();
+			return EXIT_SUCCESS;
+		}
+		genalg.Pcalc();
+		genotype apprx = genalg.calculate_children();
+		if(iter == itermax) {
+			itermax *= 10;
 			char ch;
+			printf("approximated result:");
+			apprx.print();
 			printf("operation took %d iterations, continue?(Y/N)", iter);
 			while(1) {
 				scanf("%c\n", &ch);
@@ -232,14 +253,6 @@ int main(void) {
 					printf("(Y/N)");
 			}
 		}
-		genotype* mayberesult = genalg.fitness();
-		if(mayberesult != NULL) {
-			printf("found result to equation at iteration %d:\n", iter);
-			mayberesult->print();
-			return EXIT_SUCCESS;
-		}
-		genalg.Pcalc();
-		genalg.calculate_children();
 		//genalg.print_fathers();
 		genalg.mutate_children();
 		//genalg.print_children();
