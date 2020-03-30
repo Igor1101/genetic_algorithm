@@ -64,7 +64,7 @@ public:
 	}
 	void print()
 	{
-		printf(":\t Pfather=%f\tdelta=%d\tx1=%d\tx2=%d\tx3=%d\tx4=%d\n", Pfather, delta, x1, x2, x3, x4);
+		printf(":Pfather=%f\tdelta=%d\tx1=%d\tx2=%d\tx3=%d\tx4=%d\n", Pfather, delta, x1, x2, x3, x4);
 	}
 };
 class genetic {
