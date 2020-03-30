@@ -219,9 +219,9 @@ int main(void) {
 		}
 		genalg.Pcalc();
 		genalg.calculate_children();
-		genalg.print_fathers();
+		//genalg.print_fathers();
 		genalg.mutate_children();
-		genalg.print_children();
+		//genalg.print_children();
 		genalg.copy_children_fathers();
 	}
 	return EXIT_SUCCESS;
