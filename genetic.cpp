@@ -8,7 +8,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <new>
-#include <bits/stdc++.h>
+#include <algorithm>    // std::sort
+#include <array>
 #include "RNG.h"
 
 class genotype {
@@ -207,10 +208,30 @@ public:
 };
 int main(void) {
 	puts("genetic algorithm");
-	genetic genalg = genetic(24, 1, 3, 2, 1);
+	puts(" ax1+bx2+cx3+dx4=y ");
+	puts("input a b c d y");
+	printf("-> ");
+	int a,b,c,d,y;
+	scanf("%d%d%d%d%d", &a,&b,&c,&d,&y);
+	genetic genalg = genetic(y, a, b, c, d);
 	genalg.generate_fathers();
 	int iter=1;
 	for(;;iter++) {
+		if((iter % 1000) == 0) {
+			char ch;
+			printf("operation took %d iterations, continue?(Y/N)", iter);
+			while(1) {
+				scanf("%c\n", &ch);
+				if(ch == 'Y') {
+					puts("continuing");
+					break;
+				}
+				else if(ch == 'N')
+					return EXIT_FAILURE;
+				else
+					printf("(Y/N)");
+			}
+		}
 		genotype* mayberesult = genalg.fitness();
 		if(mayberesult != NULL) {
 			printf("found result to equation at iteration %d:\n", iter);
