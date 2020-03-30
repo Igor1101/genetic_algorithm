@@ -241,17 +241,22 @@ int main(void) {
 			printf("approximated result:");
 			apprx.print();
 			printf("operation took %d iterations, continue?(Y/N)", iter);
+			/* use system call to make terminal send all keystrokes directly to stdin */
+			system ("/bin/stty raw");
 			while(1) {
-				scanf("%c\n", &ch);
+				ch=getchar();
+				putchar(ch);
 				if(ch == 'Y') {
 					puts("continuing");
-					break;
+				 	break;
 				}
 				else if(ch == 'N')
 					return EXIT_FAILURE;
 				else
 					printf("(Y/N)");
 			}
+			/* use system call to set terminal behaviour to more normal behaviour */
+			system ("/bin/stty cooked");
 		}
 		//genalg.print_fathers();
 		genalg.mutate_children();
