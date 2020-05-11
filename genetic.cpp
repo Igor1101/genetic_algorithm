@@ -161,25 +161,30 @@ public:
 		}
 		return result;
 	}
+	// return selected parent
+	genotype selection(void)
+	{
+		float rand = RNG.get_float(0, 1);
+		float sumPfather = 0;
+		for(int i=0; i<GENS; i++) {
+			sumPfather += fathers[i].Pfather;
+			if(rand < sumPfather) {
+				return fathers[i];
+			}
+		}
+		puts("something wrong with selection");
+		return fathers[0];
+	}
 	// return most approximated result
 	genotype calculate_children()
 	{
 		// sort fathers
-		std::sort(fathers.begin(), fathers.end(), cmp_fathers);
+		//std::sort(fathers.begin(), fathers.end(), cmp_fathers);
 		// get from best to worst ones
-		int times_use = GENS/2;
-		int begin_from = 0;
 		for(int i=0; i<GENS; i++) {
-			genotype gen = fathers[i];
-			for(int j=begin_from; j<begin_from+times_use; j++) {
-				children[j] = cross(gen, fathers[j]);
-			}
-			begin_from += times_use;
-			times_use /=2;
-			if(times_use == 0)
-				times_use =1;
-			if(begin_from >= GENS)
-				break;
+			genotype gen1 = selection();
+			genotype gen2 = selection();
+			children[i] = cross(gen1, gen2);
 		}
 		return fathers[0];
 	}
