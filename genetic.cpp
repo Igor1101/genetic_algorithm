@@ -146,25 +146,26 @@ public:
 	{
 		RNG_init();
 		genotype result;
-		if(RNG.get_int(0, 1)) {
+		int cross_point = RNG.get_int(0, 2);
+		switch(cross_point) {
+		case 0:
 			result.x1 = g1.x1;
-		} else {
-			result.x1 = g2.x1;
-		}
-		if(RNG.get_int(0, 1)) {
-			result.x2 = g1.x2;
-		} else {
 			result.x2 = g2.x2;
-		}
-		if(RNG.get_int(0, 1)) {
-			result.x3 = g1.x3;
-		} else {
 			result.x3 = g2.x3;
-		}
-		if(RNG.get_int(0, 1)) {
-			result.x4 = g1.x4;
-		} else {
 			result.x4 = g2.x4;
+			break;
+		case 1:
+			result.x1 = g1.x1;
+			result.x2 = g1.x2;
+			result.x3 = g2.x3;
+			result.x4 = g2.x4;
+			break;
+		case 2:
+			result.x1 = g1.x1;
+			result.x2 = g1.x2;
+			result.x3 = g1.x3;
+			result.x4 = g2.x4;
+			break;
 		}
 		return result;
 	}
@@ -191,6 +192,11 @@ public:
 		for(int i=0; i<GENS; i++) {
 			genotype gen1 = selection();
 			genotype gen2 = selection();
+			pr_debug("selected:");
+			if(DEBUG) {
+				gen1.print();
+				gen2.print();
+			}
 			children[i] = cross(gen1, gen2);
 		}
 		return fathers[0];
@@ -274,9 +280,12 @@ int main(void) {
 			}
 			/* use system call to set terminal behaviour to more normal behaviour */
 		}
-		//genalg.print_fathers();
+		if(DEBUG)
+			genalg.print_children();
+		pr_debug("children mutation");
 		genalg.mutate_children();
-		//genalg.print_children();
+		if(DEBUG)
+			genalg.print_children();
 		genalg.copy_children_fathers();
 	}
 	return EXIT_SUCCESS;
