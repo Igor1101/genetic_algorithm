@@ -13,6 +13,13 @@
 #include "getch.h"
 #include "RNG.h"
 
+#define DEBUG 1
+
+#if DEBUG
+#define pr_debug(...) printf(__VA_ARGS__)
+#else
+#define pr_debug(...)
+#endif
 class genotype {
 public:
 	int x1;
@@ -233,6 +240,7 @@ int main(void) {
 	int iter=1;
 	int itermax=1000;
 	for(;;iter++) {
+		pr_debug("iter:%d, :", iter);
 		genotype* mayberesult = genalg.fitness();
 		if(mayberesult != NULL) {
 			printf("found result to equation at iteration %d:\n", iter);
@@ -240,6 +248,8 @@ int main(void) {
 			return EXIT_SUCCESS;
 		}
 		genalg.Pcalc();
+		if(DEBUG)
+			genalg.print_fathers();
 		genotype apprx = genalg.calculate_children();
 		if(iter == itermax) {
 			itermax *= 10;
