@@ -25,7 +25,6 @@ public:
 	int x1;
 	int x2;
 	int x3;
-	int x4;
 	int delta;
 	double Pfather;
 	void generate(int y)
@@ -35,18 +34,16 @@ public:
 			x1 = RNG.get_int(1, y/2);
 			x2 = RNG.get_int(1, y/2);
 			x3 = RNG.get_int(1, y/2);
-			x4 = RNG.get_int(1, y/2);
 		} else {
 			x1 = RNG.get_int(y/2, 1);
 			x2 = RNG.get_int(y/2, 1);
 			x3 = RNG.get_int(y/2, 1);
-			x4 = RNG.get_int(y/2, 1);
 		}
 	}
 	void mutate()
 	{
 		RNG_init();
-		switch(RNG.get_int(0, 8)) {
+		switch(RNG.get_int(0, 6)) {
 		case 0:
 			x1 += 1;
 			break;
@@ -57,21 +54,15 @@ public:
 			x3 += 1;
 			break;
 		case 3:
-			x4 += 1;
-			break;
-		case 4:
 			x1 -= 1;
 			break;
-		case 5:
+		case 4:
 			x2 -= 1;
 			break;
-		case 6:
+		case 5:
 			x3 -= 1;
 			break;
-		case 7:
-			x4 -= 1;
-			break;
-		case 8:
+		case 6:
 			break;
 		default:
 			break;
@@ -79,7 +70,7 @@ public:
 	}
 	void print()
 	{
-		printf(":Pfather=%f\tdelta=%d\tx1=%d\tx2=%d\tx3=%d\tx4=%d\n", Pfather, delta, x1, x2, x3, x4);
+		printf(":Pfather=%f\tdelta=%d\tx1=%d\tx2=%d\tx3=%d\n", Pfather, delta, x1, x2, x3);
 	}
 };
 class genetic {
@@ -96,24 +87,23 @@ private:
 		return f1.Pfather > f2.Pfather;
 	}
 public:
-	genetic(int y, int a, int b, int c, int d) {
+	genetic(int y, int a, int b, int c) {
 		this->y = y;
 		this->a = a;
 		this->b = b;
 		this->c = c;
-		this->d = d;
 	}
 	int f(genotype a)
 	{
-		return f(a.x1, a.x2, a.x3, a.x4);
+		return f(a.x1, a.x2, a.x3);
 	}
-	int f(int x1, int x2, int x3, int x4)
+	int f(int x1, int x2, int x3)
 	{
-		return a*x1 + b*x2 + c*x3 + d*x4;
+		return a*x1 + b*x2 + c*x3 ;
 	}
-	bool result(int x1, int x2, int x3, int x4)
+	bool result(int x1, int x2, int x3)
 	{
-		return f(x1,x2,x3, x4) == y;
+		return f(x1,x2,x3) == y;
 	}
 	void generate_fathers()
 	{
@@ -146,25 +136,17 @@ public:
 	{
 		RNG_init();
 		genotype result;
-		int cross_point = RNG.get_int(0, 2);
+		int cross_point = RNG.get_int(0, 1);
 		switch(cross_point) {
 		case 0:
 			result.x1 = g1.x1;
 			result.x2 = g2.x2;
 			result.x3 = g2.x3;
-			result.x4 = g2.x4;
 			break;
 		case 1:
 			result.x1 = g1.x1;
 			result.x2 = g1.x2;
 			result.x3 = g2.x3;
-			result.x4 = g2.x4;
-			break;
-		case 2:
-			result.x1 = g1.x1;
-			result.x2 = g1.x2;
-			result.x3 = g1.x3;
-			result.x4 = g2.x4;
 			break;
 		}
 		return result;
@@ -236,12 +218,12 @@ public:
 };
 int main(void) {
 	puts("genetic algorithm");
-	puts(" ax1+bx2+cx3+dx4=y ");
+	puts(" ax1+bx2+cx3=y ");
 	puts("input a b c d y");
 	printf("-> ");
-	int a,b,c,d,y;
-	scanf("%d%d%d%d%d", &a,&b,&c,&d,&y);
-	genetic genalg = genetic(y, a, b, c, d);
+	int a,b,c,y;
+	scanf("%d%d%d%d", &a,&b,&c,&y);
+	genetic genalg = genetic(y, a, b, c);
 	genalg.generate_fathers();
 	int iter=1;
 	int itermax=1000;
